@@ -195,11 +195,31 @@ func main() {
 			fmt.Println("Высокий человек")
 		}
 		// выведет: Человек среднего роста
+
+		var balance int = 1100
+		
+		if balance > 1000 {
+			fmt.Println("Apple")
+		} else if balance < 500 {
+			fmt.Println("Nokia с фонариком")
+		} else {
+			fmt.Println("Samsung")
+		}
 	}
 
 // 4.2  Оператор switch
 
 	{
+		var balance int = 1100
+
+		var out string
+		switch {
+			case balance > 1000: out = "Apple"
+			case balance >= 500 && balance <= 1000: out = "Samsung"
+			case balance < 500: out = "Nokia с фонариком"
+		}	
+		fmt.Println(out)
+
 		x := 2
 
 		switch x {
@@ -259,6 +279,8 @@ func main() {
 
 // 4.3 Циклы
 
+// Цикл for
+
 	{
 		for i := 0; i <= 5; i++ {
 		fmt.Println(i)
@@ -281,6 +303,34 @@ func main() {
 			fmt.Println(k)
 			k++
 		}
+
+// Оператор continue	
+
+		sum_even := 0
+		
+		for i := 1; i <= 10; i++ {
+			if i % 2 != 0 {
+				continue             // число нечетное, то пропускаем его 
+			}                        // и переходим к следующей итерации
+			sum_even += i
+		}
+		fmt.Println(sum_even)        // выведет: 30
+
+// Оператор break
+
+		for i := 1; i <= 9; i++{
+			if i % 5 == 0 {
+				break            // если число кратно 5, то выходим из цикла
+			}
+			fmt.Println(i)
+		}
+		/* выведет:
+		1
+		2
+		3
+		4
+		*/
+
 	}
 }
 
