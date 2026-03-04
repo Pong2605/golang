@@ -274,7 +274,6 @@ func main() {
 		Четверг
 		Пятница
 		*/
-
 	}
 
 // 4.3 Циклы
@@ -330,7 +329,34 @@ func main() {
 		3
 		4
 		*/
-
 	}
 }
 
+// 5.1 Введение в функции
+
+// func helloStepik() {
+// 	fmt.Println("Привет, Степик!") // тело функции
+// }
+// func main() {
+// 	helloStepik()
+// }
+
+
+// func mult(x, y int) {
+//     fmt.Println(x * y)
+// }
+
+// func main() {
+// 	var a, b int
+// 	fmt.Scan(&a, &b)
+// 	mult(a, b)
+// }
+	
+// func concat(a, b string) string {
+//     res := a + b
+//     return res
+// }
+
+// func plusMinus(x, y int) (int, int) {
+//     return x + y, x - y
+// } 
