@@ -888,7 +888,81 @@ fmt.Println("7.4 Карты (maps) (Аналог словарей)")
 // 7.5 Функции с переменным количеством аргументов
 fmt.Println("7.5 Функции с переменным количеством аргументов")
 
+{
+	// func sum(nums ...int) {
+	// total := 0
+	// for _, v := range nums {
+	// total += v
+	// }
+	// fmt.Println(total)
+
+	// sum(2, 4, 6)          // выведет 12
+	// sum(42, 8)            // выведет 50
+	// sum(1, 2, 3, 4, 5, 6) // выведет 21
+
+	// Или:
+	// s := []int{42, 33, 22, 11}
+	// sum(s...)
 }
+
+{
+	// Вы создаете программу для анализа результатов спортивных матчей и подсчета очков заданной команды.
+	// Результаты матчей хранятся в срезе results.
+	// Каждый матч имеет один из следующих результатов:
+	// "w" - выиграл
+	// "l" - проиграл
+	// "d" - ничья
+
+	// Победа добавляет три очка, ничья - одно очко, а проигранный матч не добавляет очков.
+
+	results := []string{"w", "l", "w", "d", "w", "l", "l", "l", "d", "d", "w", "l", "w", "d"}
+    
+    var last_res string
+    // fmt.Scan(&last_res)
+	last_res = "w"
+    
+    results = append(results, last_res)
+    
+    var total int = 0
+    
+    for _, s := range results {
+        switch {
+			case s == "w": total += 3
+			case s == "d": total += 1
+			case s == "l": continue
+        } 
+    }
+    
+    fmt.Println(total)
+}
+
+{
+	results := []string{"w", "l", "w", "d", "w", "l", "l", "l", "d", "d", "w", "l", "w", "d"}
+    
+    var last_res string
+    // fmt.Scan(&last)
+
+	last_res = "w"
+    
+    results = append(results, last_res)
+    
+    points := map[string]int {
+        "w" : 3,
+        "d" : 1,
+        "l" : 0}
+    
+    total := 0
+    
+    for _, last_res := range results {
+        total += points[last_res]
+    }
+
+    fmt.Println(total)
+}
+
+}
+
+
 
 
 
