@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go_for_dummies_borshch/utils"
 	"strings"
+	"unicode/utf8"
 	// "bufio"
 	// "os"
 )
@@ -99,5 +100,36 @@ fmt.Println("Преобразование типов")
 Деление: %v`, x+y, x-y, x*y, x/y)
 }
 
+// 6.2 Операции над строками и символами
+fmt.Println("6.2 Операции над строками и символами")
+fmt.Println("Длина строки")
+
+{
+    text := "Этот текст состоит из 74 байт и 43 символов"
+    var lengthInBytes int = len(text)
+    var lengthInRunes int = utf8.RuneCountInString(text)
+    fmt.Println(lengthInBytes, lengthInRunes)
+
+// Если нужно вычислить длину строки, содержащей только английские буквы, символы и цифры, достаточно использовать функцию len(), так как каждый из этих символов занимает один байт.
+// Если требуется узнать длину строки, в которой присутствуют буквы других языков, такие как русские или арабские, следует применять функцию utf8.RuneCountInString() из пакета "unicode/utf8".	
+}
+
+fmt.Println("Операции над типом rune")
+
+{
+    var r rune = 'B'   // 'B' имеет код 66 в Unicode
+    fmt.Println(r + 1) // 'C' имеет код 67 в Unicode 
+    fmt.Println(r - 1) // 'A' имеет код 65 в Unicode 
+}
+
+fmt.Println("Вывод rune как int32 и string")
+
+{
+    var r rune = 'A'  // 'A' имеет код 65 в Unicode
+
+    fmt.Println(r)    // выведет 65 на консоль
+
+    fmt.Println(string(r)) // выведет "B"
+}
 }
 
