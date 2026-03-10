@@ -131,5 +131,33 @@ fmt.Println("Вывод rune как int32 и string")
 
     fmt.Println(string(r)) // выведет "B"
 }
+
+// 7.2 Конструкция switch
+fmt.Println("7.2 Конструкция switch")
+
+{
+    const (
+        Morning = 1
+        Afternoon = 2
+        Evening = 3
+        Night = 4
+    )
+
+    timeOfDay := 2
+
+    switch timeOfDay {
+    case Morning:
+        fmt.Println("Сейчас утро!")
+    case Afternoon:
+        fmt.Println("Сейчас обед!")
+    case Evening:
+        fmt.Println("Сейчас вечер!")
+    case Night:
+        fmt.Println("Сейчас ночь!")
+    default:
+        fmt.Println("Сейчас неизвестное время года...")
+    }
+}
+
 }
 
