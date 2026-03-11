@@ -159,5 +159,55 @@ fmt.Println("7.2 Конструкция switch")
     }
 }
 
+fmt.Println("Калькулятор")
+
+{
+const (
+		Addition     = "+"
+		Subtraction  = "-"
+		Multiplication = "*"
+		Division     = "/"
+		Modulus      = "%"
+	)
+
+	var firstNumber, secondNumber float64
+	var operation string
+
+	// fmt.Scan(&firstNumber, &secondNumber, &operation)
+
+    firstNumber, secondNumber, operation = 4, 2, "/"
+
+	// Проверяем, является ли firstNumber целым числом
+	if firstNumber != float64(int(firstNumber)) {
+		fmt.Println("Первое число не является целым, операция остатка от деления (%) может работать некорректно.")
+	}
+
+	switch operation {
+	case Addition:
+		fmt.Println(firstNumber + secondNumber)
+	case Subtraction:
+		fmt.Println(firstNumber - secondNumber)
+	case Multiplication:
+		fmt.Println(firstNumber * secondNumber)
+	case Division:
+		if secondNumber == 0 {
+			fmt.Println("Делить на ноль нельзя!")
+		} else {
+			fmt.Println(firstNumber / secondNumber)
+		}
+	case Modulus:
+		// Проверяем, что оба числа фактически целые, перед выполнением %
+		if firstNumber != float64(int(firstNumber)) || secondNumber != float64(int(secondNumber)) {
+			fmt.Println("Для операции остатка от деления оба числа должны быть целыми.")
+		} else if secondNumber == 0 {
+			fmt.Println("Делить на ноль нельзя!")
+		} else {
+			fmt.Println(int(firstNumber) % int(secondNumber))
+		}
+	default:
+		fmt.Println("Неподдерживаемая операция")
+	}
+}
+
 }
 
