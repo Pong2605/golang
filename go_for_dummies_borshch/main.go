@@ -163,11 +163,11 @@ fmt.Println("Калькулятор")
 
 {
 const (
-		Addition     = "+"
-		Subtraction  = "-"
-		Multiplication = "*"
-		Division     = "/"
-		Modulus      = "%"
+		Addition        = "+"
+		Subtraction     = "-"
+		Multiplication  = "*"
+		Division        = "/"
+		Modulus         = "%"
 	)
 
 	var firstNumber, secondNumber float64
@@ -209,5 +209,143 @@ const (
 	}
 }
 
+// 9.1 Массивы
+fmt.Println("9.1 Массивы")
+
+{
+    // 1. Объявление массива с нулевыми значениями
+    var arr [5]int // Обьявили переменную arr типа: Массив чисел int с размером 5
+    fmt.Println(arr)
 }
+
+{
+    // 2. Объявление и инициализация значениями
+    arr := [5]int{10, 20, 30, 40, 50} // Массив на 5 элементов, значения заданы явно
+    fmt.Println(arr)
+}
+
+{
+    // 3. Частичная инициализация
+    arr := [5]int{1, 2} // Массив: [1, 2, 0, 0, 0]
+    fmt.Println(arr)
+}
+
+{
+    arr := [20]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3}
+
+    max1 := arr[0]
+    index1 := 0
+    for i := 1; i < len(arr); i++ {
+        if arr[i] > max1 {
+            max1 = arr[i]
+            index1 = i
+        }
+    }
+
+    max2 := -1 << 31
+    index2 := -1
+    for i := 0; i < len(arr); i++ {
+
+        if i != index1 && arr[i] > max2 {
+            max2 = arr[i]
+            index2 = i
+        }
+    }
+
+
+    if index1 < index2 {
+        fmt.Println(max1, max2)
+    } else {
+        fmt.Println(max2, max1)
+    }
+}
+
+// 9.2 Срезы (slice)
+fmt.Println("9.2 Срезы (slice)")
+
+{
+    // Динамическая структура данных — это структура, которая может изменять свой размер во время работы программы. 
+
+    // Упрощенно:
+
+    // Если данных мало — она использует меньше памяти.
+    // Если данных много — она автоматически "растет", чтобы вместить всё, что нужно.
+
+
+    // Слайсы можно создавать тремя способами:
+
+    // 1. Создание пустого слайса
+
+    var slice1 []int // Создан пустой слайс
+    fmt.Println(slice1)
+                    
+    // 2. Создание слайса с начальными значениями:
+
+    slice2 := []int{10, 20, 40, 50, 100} // Слайс с 5 элементами
+    fmt.Println(slice2)
+                    
+    // 3. Создание пустого слайса через make (наиболее распространенный) потому-что:
+
+    // Функция make позволяет задавать длину и емкость слайса:
+
+    slice3 := make([]int, 3, 5) // Длина 3, емкость 5
+    fmt.Println(slice3)
+
+    // Функция make принимает три аргумента:
+
+    // Тип слайса (первый аргумент): Тип слайса который вы хотите создать.
+    // Длина (второй аргумент): Начальное количество элементов в слайсе.
+    // Емкость (третий аргумент необязательный): Максимальное количество элементов, 
+    // которые слайс может хранить без выделения новой памяти.
+}
+
+{
+    slice := []int{10, 20, 30}
+
+    slice = append(slice, 40)  // Добавляем элемент 40
+    fmt.Println(slice)         // [10, 20, 30, 40]
+
+    slice = append(slice, 100) // Добавляем элемент 100
+    fmt.Println(slice)         // [10, 20, 30, 40, 100]
+}
+
+{
+    slice := []int{}
+    fmt.Println(slice) // []
+
+    slice = append(slice, 10, 20, 30)
+    fmt.Println(slice) // [10, 20, 30]
+
+    slice = append(slice, 40, 100)
+    fmt.Println(slice) // [10, 20, 30, 40, 100]
+}
+
+{
+    slice := []int{1, 2, 3, 4}
+    fmt.Println(slice)
+
+    subSlice := slice[1:3]
+    fmt.Println(subSlice)
+
+    subSlice[1] = 5
+
+    fmt.Println(subSlice)
+}
+
+{
+    var slice []int = []int{1, 2, 3}
+    fmt.Println(slice)
+
+    slice2 := append(slice, 4, 5, 6)
+    fmt.Println(slice)
+    fmt.Println(slice2)
+
+    slice2[0] = 100
+    fmt.Println(slice)
+    fmt.Println(slice2)
+}
+
+}
+
+
 
