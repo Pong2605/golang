@@ -345,7 +345,70 @@ fmt.Println("9.2 Срезы (slice)")
     fmt.Println(slice2)
 }
 
+// 9.3 Конструкция for := range
+fmt.Println("9.3 Конструкция for := range")
+
+{
+	// import (
+	// 	"bufio"
+	// 	"fmt"
+	// 	"os"
+	// )
+
+	// input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+
+	input := "Привет, мир!"
+	for _, char := range input {
+		fmt.Println(string(char))
+	}
+}
+
+{
+	// import (
+	// 	"bufio"
+	// 	"fmt"
+	// 	"os"
+	// )
+
+	// input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+	input := "Hello, world!"
+
+    var count int
+    
+    for _, char := range input {
+        switch string(char){
+            case "a", "e", "i", "o", "u":
+            count++
+        }
+    }
+    fmt.Print(count)
+}
+
+{
+	// import (
+	//     "bufio"
+	//     "fmt"
+	//     "os"
+	//     "strings"
+	// )
+
+
+    // reader := bufio.NewReader(os.Stdin)
+    // input, _ := reader.ReadString('\n')
+	input := "Hello, world!"
+	
+    vowels := "aeiouAEIOU"
+    count := 0
+
+    for _, char := range input {
+        if strings.ContainsRune(vowels, char) {
+            count++
+        }
+    }
+
+    fmt.Println(count)
 }
 
 
+}
 
