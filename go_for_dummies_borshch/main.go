@@ -494,5 +494,10 @@ fmt.Println("10  Хеш-таблицы")
         fmt.Printf("ID: %d, Name: %s\n", id, name)
     }
 }
+
+{
+    slice1 := []int{}
+    fmt.Println(slice1)
+}
 }
 
