@@ -409,6 +409,90 @@ fmt.Println("9.3 Конструкция for := range")
     fmt.Println(count)
 }
 
+// 10  Хеш-таблицы
+fmt.Println("10  Хеш-таблицы")
 
+{
+    fmt.Println("Map (мапа)")
+    
+    books := map[string]string {
+    "Гарри Поттер": "Дж. К. Роулинг",
+    "Властелин Колец": "Дж. Р. Р. Толкин",
+    "1984":  "Джордж Оруэлл",
+    }
+    fmt.Println(books["Властелин Колец"])  // Дж. Р. Р. Толкин
+
+}
+
+{
+    // Как создавать map?
+    // Создать map можно тремя способами:
+
+    // 1. Создание пустого map c помощью make():
+
+    books := make(map[int]string)
+    fmt.Println(books)
+
+    // 2. Создание map с начальными значениями: 
+
+    isMale := map[string]bool {
+    "Илья": true,
+    "Вика": false,
+    "Василий": true,
+    }
+    fmt.Println(isMale)
+
+    // 3. Создание пустого map через make с заданной емкостью (редко используется):
+
+    someMap := make(map[float32]float64, 10) // Создаем map с емкостью для 10 элементов
+    fmt.Println(someMap)
+}
+
+{
+    fmt.Println("Проверка на наличие ключа в мапе")
+
+    database := map[int]string {
+        1: "Illia Borshch",
+        2: "Petya Pupkin",
+    }
+
+    name, ok := database[123]
+
+    if ok {
+        fmt.Println("Значение:", name)
+    } else {
+        fmt.Println("Ключ не найден!")  // это будет выведено
+    }
+}
+
+{
+    database := map[int]string {
+        1: "Illia Borshch",
+        2: "Petya Pupkin",
+    }
+    fmt.Println("Удаление пар в map")
+
+    delete(database, 1)  // удалили Илью 🥲
+
+    _, ok := database[1]
+    if ok {
+        fmt.Println("delete не сработала и Илья остался в базе данных!")
+    } else {
+        fmt.Println("delete сработал как надо!")
+    }
+}
+
+{
+    fmt.Println("Итерация по map")
+
+    database := map[int]string{
+        1: "Illia Borshch",
+        2: "Petya Pupkin",
+    }
+
+    for id, name := range database {
+        fmt.Printf("ID: %d, Name: %s\n", id, name)
+    }
+}
 }
 
