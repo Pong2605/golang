@@ -1,12 +1,15 @@
 package main
 
 import (
-	"fmt"
-	"go_for_dummies_borshch/utils"
-	"strings"
-	"unicode/utf8"
 	// "bufio"
 	// "os"
+	"fmt"
+	"go_for_dummies_borshch/utils"
+	"maps"
+	"slices"
+	"sort"
+	"strings"
+	"unicode/utf8"
 )
 
 func main() {
@@ -496,8 +499,377 @@ fmt.Println("10  Хеш-таблицы")
 }
 
 {
-    slice1 := []int{}
-    fmt.Println(slice1)
+// Напишите программу, которая подсчитывает количество уникальных символов в строке (включая пробелы и знаки пунктуации).
+
+// Программа должна:
+
+// Прочитать строку, введённую пользователем.
+// Найти все уникальные символы в строке.
+// Вывести их в порядке возрастания ASCII-кодов.
+
+    // scanner := bufio.NewScanner(os.Stdin)
+
+	// Считываем строку от пользователя
+	// scanner.Scan()
+	// input := scanner.Text()
+
+    input := "Hello, World!"
+
+	// Создаём карту для хранения уникальных символов (ключ — rune, значение — bool)
+	dict := make(map[rune]bool)
+
+	// Проходим по всем символам строки и добавляем их в карту
+	for _, char := range input {
+		dict[char] = true
+	}
+
+	// Преобразуем ключи карты (символы) в срез для сортировки
+	var chars []rune
+	for char := range dict {
+		chars = append(chars, char)
+	}
+
+	// Сортируем символы по ASCII‑коду (по возрастанию)
+	sort.Slice(chars, func(i, j int) bool {
+		return chars[i] < chars[j]
+	})
+
+	// Выводим результат: символы через пробел
+	for _, char := range chars {
+		// if i > 0 {
+		// 	fmt.Print(" ") // пробел между символами
+		// }
+		fmt.Printf("%c", char) // выводим символ как rune
+	}
+    fmt.Println()
+}
+
+{
+    // reader := bufio.NewReader(os.Stdin)
+	// input, _ := reader.ReadString('\n')
+    input := "Hello, World!"
+
+    dict := make(map[rune]int)
+    
+    for _, key := range input {
+        dict[key]++
+    }
+
+    arr := slices.Sorted(maps.Keys(dict))
+    
+    for _, char := range arr {
+        fmt.Print(string(char))
+    }
+    fmt.Println()    
+}
+
+{
+    // dict := make(map[string]int)
+    // var key string
+    
+    // for n, _ := fmt.Scan(&key); n > 0; n, _ = fmt.Scan(&key) {
+    //     dict[key]++
+    // }
+
+    // arr := slices.Sorted(maps.Keys(dict))
+    
+    // fmt.Println(arr)
+
+    // for _, el := range arr {
+    //     fmt.Print(el, ": ", dict[el], "\n")
+    // }
+}
+
+{
+    // Проект – Конвертер валют
+    // Курс валют относительно 1 USD
+    var rates = map[string]float64{
+        "USD": 1.0,   // Доллар США
+        "EUR": 0.92,  // Евро
+        "RUB": 90.0,  // Российский рубль
+        "JPY": 157.0, // Японская иена
+        "CNY": 7.25,  // Китайский юань
+        "GBP": 0.78,  // Британский фунт
+        "KZT": 460.0, // Казахстанский тенге
+        "TRY": 32.5,  // Турецкая лира
+        "INR": 83.0,  // Индийская рупия
+        "BRL": 5.12,  // Бразильский реал
+        "AUD": 1.50,  // Австралийский доллар
+        "CAD": 1.36,  // Канадский доллар
+        "CHF": 0.89,  // Швейцарский франк
+        "SEK": 10.8,  // Шведская крона
+        "NOK": 10.5,  // Норвежская крона
+    }
+
+    // генерируем слайс валют для удобства
+    currencies := make([]string, 0)
+    for currency := range rates {
+        currencies = append(currencies, currency)
+    }
+
+    fmt.Println("Добро пожаловать в конвертер валют!")
+    fmt.Println("Доступные валюты для конвертации:")
+    for i, currency := range currencies {
+        fmt.Printf("%d. %s\n", i+1, currency)
+    }
+
+    fmt.Println()
+
+    var amount float64
+    fmt.Print("Введите сумму в USD: ")
+    // fmt.Scan(&amount)
+    amount = 5.0
+
+    if amount <= 0 {
+        fmt.Println("Сумма должна превышать 0!")
+    }
+
+    fmt.Println("Выберите номер валюты для конвертации из списка выше:")
+    var choice int
+    // fmt.Scan(&choice)
+    choice = 2
+
+    if choice <= 0 || choice > len(currencies) {
+        fmt.Println("Неправильный выбор валюты!")
+    }
+
+    selectedCurrency := currencies[choice-1]
+
+    conversionRate := rates[selectedCurrency]
+    convertedAmount := amount * conversionRate
+    fmt.Printf("%.2f USD = %.2f %s\n", amount, convertedAmount, selectedCurrency) 
+}
+
+{
+	// reader := bufio.NewReader(os.Stdin)
+    input := "abcdaabcde"
+	// Считываем строку от пользователя
+	// input, _ := reader.ReadString('\n')
+	input = input[:len(input)-1] // Убираем символ \n
+
+	if len(input) == 0 {
+		fmt.Println("0 ")
+		return
+	}
+
+	charIndex := make(map[rune]int) // Карта: символ → последний индекс
+	maxLen := 0                    // Максимальная длина подстроки
+	maxStart := 0                 // Начальная позиция максимальной подстроки
+	start := 0                    // Начало текущей подстроки без повторов
+
+
+	for end, char := range input {
+		// Если символ уже встречался И его последний индекс >= start
+		if lastIndex, ok := charIndex[char]; ok && lastIndex >= start {
+			start = lastIndex + 1 // Сдвигаем начало подстроки после последнего вхождения
+		}
+
+		charIndex[char] = end // Обновляем последний индекс символа
+
+
+		// Проверяем, стала ли текущая подстрока длиннее максимальной
+		currentLen := end - start + 1
+		if currentLen > maxLen { // Строгое сравнение: только если длиннее
+			maxLen = currentLen
+			maxStart = start
+		}
+	}
+
+	// Формируем результат
+	longestSubstring := input[maxStart : maxStart+maxLen]
+	fmt.Printf("%d %s\n", maxLen, longestSubstring)
+}
+
+// Функции с неограниченным количеством параметров
+fmt.Println("Функции с неограниченным количеством параметров")
+
+{
+    // func sum(nums ...int) int {
+    // total := 0
+    // for _, num := range nums {
+    //     total += num
+    // }
+    // return total
+
+
+// func main() {
+    result := utils.Sum(1, 2, 3, 4, 5)
+    fmt.Println("Сумма:", result) // 15
+
+    result = utils.Sum(1, 2, 3, 4, 5, 10, 100)
+    fmt.Println("Сумма:", result) // 125
+// }
+}
+
+fmt.Println("Распаковка слайса")
+
+{
+// func sum(numbers ...int) int {
+//     total := 0
+//     for _, num := range numbers {
+//         total += num
+//     }
+//     return total
+// }
+
+// func main() {
+    nums := []int{10, 20, 30}
+
+    // result := sum(nums[0], nums[1], nums[2])  <- о таком ужасе мы забываем
+
+    result := utils.Sum(nums...)        // Распаковка слайса nums
+    fmt.Println("Сумма:", result) // 60
+// }
+}
+
+fmt.Println("Тип данных any")
+
+{
+// Тип данных any – появился в Go 1.18 как новый универсальный тип. 
+// Для знатоков – это просто псевдоним для уже существующего типа interface{}.
+// Но что он означает? any буквально означает "любой тип данных". 
+// Это позволяет функциям работать с данными любого типа без необходимости уточнять их на этапе компиляции.  
+
+// func print(args ...any) {
+//     for _, arg := range args {
+//         fmt.Print(arg, " ")
+//     }
+// }
+
+// func main() {
+    utils.Print("Привет", 42, 3.14, true, []int{1, 2, 3})
+// }
+
+}
+
+fmt.Println("Возврат нескольких значений")
+
+{
+
+// Функции с несколькими возвращаемыми значениями полезны в ситуациях, 
+// когда нужно вернуть основной результат и дополнительную информацию, 
+// например, статус выполнения или ошибку
+
+// func divide(a, b int) (int, bool) {
+//     if b == 0 {
+//         return 0, false
+//     }
+//     return a / b, true
+// }
+
+// func main() {
+    res, ok := utils.Divide(10, 2)
+    if ok {
+        fmt.Println(res)  // 5
+    } else {
+        fmt.Println("Ошибка!")
+    }
+// }
+}
+
+fmt.Println("Именованный возврат")
+
+{
+// С именованными возвращаемыми значениями мы можем явно задать имена для значений, которые функция возвращает. 
+// Это позволяет упростить код, так как можно избежать явного указания возвращаемых переменных в return. 
+
+// func findMax(numbers []int) (max int, ok bool) {
+//     if len(numbers) == 0 {
+//         max, ok = 0, false  // Присваиваем значения именованным возвращаемым переменным
+//         return              // Возвращаем без указания переменных max и ok явно
+//     }
+    
+//     max = numbers[0]   // max уже объявлен как возвращаемая переменная
+//     for _, num := range numbers {
+//         if num > max {
+//             max = num
+//         }
+//     }
+//     ok = true  // Устанавливаем флаг
+//     return     // Возвращаем автоматически
+// }
+
+// func main() {
+    nums := []int{3, 5, 7, 2, 8}
+    max, ok := utils.FindMax(nums)
+    
+    if ok {
+        fmt.Println(max)  // 8
+    } else {
+        fmt.Println("Массив пуст!")
+    }
+
+
+    // Пример с пустым массивом
+    emptyNums := []int{}
+    max, ok = utils.FindMax(emptyNums)
+    if ok {
+        fmt.Println(max)
+    } else {
+        fmt.Println("Массив пуст!")  // Массив пуст!
+    }
+// }
+}
+
+fmt.Println("Оператор defer")
+
+{
+// defer регистрирует функции для выполнения в обратном порядке их вызова!   
+
+    defer fmt.Println("A")
+    defer fmt.Println("B")
+    defer fmt.Println("C")
+    fmt.Println("D")
+
+// D
+// C
+// B
+// A
+// После выполнения всех строчек кода всей программы!
+}
+
+{
+// Анонимные функции
+
+// Анонимная функция — это функция, у которой нет имени. 
+// Она создаётся "на месте" и может быть сразу вызвана или присвоена переменной для последующего использования.
+
+// Такие функции полезны, когда:
+
+// Нужно использовать функцию только один раз!
+// Функция передаётся как аргумент в другую функцию (например, для обработки данных).
+
+    sayHello := func(name string) {
+        fmt.Println("Привет,", name)
+    }
+
+
+    // Вызываем функцию через переменную
+    sayHello("Мир")  // Привет, Мир
+    sayHello("Go")   // Привет, Go
+}
+
+{
+    fmt.Println("Как сразу вызвать анонимную функцию")
+
+    // Сразу вызываем анонимную функцию
+
+    func(a, b int) {
+        fmt.Println("Сумма:", a+b)
+    }(3, 7)  // Передаём аргументы 3 и 7
+
+    // Выведет: 10
+}
+
+{
+    // Присваиваем анонимную функцию переменной
+    multiply := func(a, b int) int {
+        return a * b
+    }
+
+    // Вызываем функцию
+    result := multiply(4, 5)
+    fmt.Println("Результат:", result) // Результат: 20
 }
 }
 
