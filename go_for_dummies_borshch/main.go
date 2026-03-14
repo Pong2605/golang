@@ -871,5 +871,14 @@ fmt.Println("Оператор defer")
     result := multiply(4, 5)
     fmt.Println("Результат:", result) // Результат: 20
 }
+
+{
+    fmt.Println("Sprintf")
+
+	var a float64 = 100.123456789
+	result := fmt.Sprintf("%.2f", a)
+	fmt.Printf("%q", result) // вывод: "100.12"
+    // result будет типа string    
+}
 }
 
