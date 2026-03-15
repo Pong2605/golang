@@ -878,7 +878,58 @@ fmt.Println("Оператор defer")
 	var a float64 = 100.123456789
 	result := fmt.Sprintf("%.2f", a)
 	fmt.Printf("%q", result) // вывод: "100.12"
+    fmt.Println()
     // result будет типа string    
 }
+
+{
+    // Реализуйте две функции:
+
+    // findMax: принимает непустой слайс чисел ([]int) и возвращает максимальный элемент этого массива.
+    // findMin: принимает непустой слайс чисел ([]int) и возвращает минимальный элемент этого массива.
+
+    // var n int
+	// fmt.Scan(&n)
+
+	// slice := make([]int, n)
+	// for i := range n {
+	// 	fmt.Scan(&slice[i])
+	// }
+
+    slice := []int{1, 3, 2, 5, 4}
+
+	fmt.Println(utils.FindMax2(slice))
+	fmt.Println(utils.FindMin2(slice))
+
+    slices.Sort(slice)
+    fmt.Println(slice[len(slice) - 1])
+    fmt.Println(slice[0])
+}
+
+{
+    // Реализуйте функцию isPalindrome, которая принимает одну строку (string) и 
+    // возвращает логическое значение (bool): true, если строка является палиндромом, и false, если нет.
+
+	// input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+	// input = input[:len(input)-1]
+
+    input := "abcdcbaa"
+
+	if utils.IsPalindrome(input) {
+		fmt.Println("Палиндром")
+	} else {
+		fmt.Println("Не палиндром")
+	}    
+}
+
+  
+// 12 Работа с файлами
+fmt.Println("12 Работа с файлами")
+fmt.Println("12.1 Текстовые файлы, форматы CSV и JSON")
+
+{
+    
+}
+
 }
 

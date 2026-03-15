@@ -42,3 +42,34 @@ func FindMax(numbers []int) (max int, ok bool) {
     ok = true  // Устанавливаем флаг
     return     // Возвращаем автоматически
 }
+
+func FindMax2(arr []int) int {
+    max := arr[0]
+    for i := 1; i < len(arr); i++ {
+        if arr[i] > max {
+            max = arr[i]
+        }
+    }
+    return max
+}
+
+func FindMin2(arr []int) int {
+    min := arr[0]
+    for i := 1; i < len(arr); i++ {
+        if arr[i] < min {
+            min = arr[i]
+        }
+    }
+    return min
+}
+
+
+func IsPalindrome(input string) bool {
+    n := len(input) / 2
+    for i := 0; i < n; i++ {
+        if input[i] != input[len(input) - i - 1] {
+        return false
+        }
+    }
+    return true
+}
