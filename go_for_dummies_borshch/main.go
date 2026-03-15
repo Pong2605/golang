@@ -2,10 +2,12 @@ package main
 
 import (
 	// "bufio"
-	// "os"
+	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"go_for_dummies_borshch/utils"
 	"maps"
+	"os"
 	"slices"
 	"sort"
 	"strings"
@@ -922,14 +924,847 @@ fmt.Println("Оператор defer")
 	}    
 }
 
+
+{
+
+fmt.Println("Наибольшая подстрока с уникальными символами")
+
+{
+	// Читаем входную строку
+	// reader := bufio.NewReader(os.Stdin)
+	// word, _ := reader.ReadString('\n')
+    word := "abcabcbb"
+	word = strings.TrimSpace(word) // Удаляем символ новой строки
+
+	// Находим самую длинную подстроку с уникальными символами
+	length, substring := utils.LongestUniqueSubstring(word)
+	
+	// Выводим результат
+	fmt.Printf("%d %s\n", length, substring)
+}
+}
   
 // 12 Работа с файлами
 fmt.Println("12 Работа с файлами")
 fmt.Println("12.1 Текстовые файлы, форматы CSV и JSON")
 
 {
+    // Пытаемся открыть файл
+    file, err := os.Open("example.txt")
     
+    // Если возникла ошибка, выводим сообщение "Неудача..."
+    if err != nil {
+        fmt.Println("Неудача...")
+        return
+    }
+    
+    // Гарантируем закрытие файла после завершения работы
+    defer file.Close()
+
+    // Метод Close() — это функция, связанная с объектом (в данном случае с файлом),
+    // и вызывается у этого объекта через точку!
+    // Например, если переменная, содержащая файл, называется "file",
+    // мы вызываем метод как file.Close().
+    // Если бы переменная называлась "aboba", то метод вызвали бы так: aboba.Close()
+
+
+    // Если ошибки нет, выводим "Успех!"
+    fmt.Println("Успех!")
+    fmt.Println(file)  
+}
+
+fmt.Println("Чтение данных из файла целиком без открытия: os.ReadFile")
+
+{
+    // Что, если мы не хотим вручную открывать и закрывать файл? Для таких случаев есть функция os.ReadFile(), 
+    // которая автоматически открывает файл, читает его содержимое и закрывает файл за нас. 
+    // Это делает код проще, но подходит только для небольших файлов, которые помещаются в оперативной памяти.
+
+    // Читаем весь файл целиком
+    content, err := os.ReadFile("example.txt")
+    if err != nil {
+        fmt.Println("Ошибка чтения файла:", err)
+        return
+    }
+
+    // Выводим содержимое на консоль
+    fmt.Println(string(content))    
+}
+
+fmt.Println("Когда использовать какую функцию для чтения файла?")
+
+{
+// io.ReadAll()
+
+// Используйте, когда:
+// Вы хотите вручную открыть файл, чтобы получить больше контроля.
+// Нужно обработать данные после открытия файла.
+// Вы работаете с потоками (например, с сетевыми соединениями или архивами), а не только с файлами.
+
+// bufio.Scanner
+
+// Используйте, когда:
+// Файл слишком большой, чтобы загружать его в память целиком.
+// Вы хотите обрабатывать файл построчно (например, лог-файлы или текстовые данные).
+// Важна эффективность обработки строки за строкой.
+
+// os.ReadFile()
+// Используйте, когда:
+// Вам нужно быстро прочитать небольшой файл.
+// Вы хотите минимизировать количество кода.
+// Вы не нуждаетесь в ручном управлении открытием и закрытием файла.
+
+// Каждая из этих функций имеет свои сильные и слабые стороны. 
+// Выбор зависит от размера файла, ваших задач и необходимости контролировать открытие/закрытие файла.    
+}
+
+fmt.Println("Создавать текстовые файлы и записывать данные")
+
+{
+// Основные шаги для записи в файл:
+
+// Открыть или создать файл:
+// Используйте функцию os.Create() для создания нового файла (или перезаписи существующего) 
+// или os.OpenFile() для открытия уже существующего файла с определёнными флагами на запись.
+
+// Записать данные в файл:
+// Используйте методы файла для записи, такие как file.Write() (записать байты) или file.WriteString() (записать строку).
+
+// Закрыть файл:
+// После завершения работы обязательно закройте файл с помощью Close()!!!
+
+// Создаём файл (если он существует, он будет перезаписан)
+    file, err := os.Create("example.txt")
+    if err != nil {
+        fmt.Println("Ошибка создания файла:", err)
+        return
+    }
+    defer file.Close() // Закрываем файл после завершения работы
+
+    // Текст для записи
+    text := "Привет, мир! Это текст, записанный в файл.\n"
+
+    // Записываем текст в файл
+    _, err = file.WriteString(text)
+    if err != nil {
+        fmt.Println("Ошибка записи в файл:", err)
+        return
+    }
+
+    fmt.Println("Данные успешно записаны в файл.")
+}
+
+fmt.Println("Запись данных в уже существующий файл")
+
+{
+    // Открываем файл в режиме добавления
+    file, err := os.OpenFile("example.txt", os.O_APPEND|os.O_WRONLY, 0644)
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close() // Закрываем файл
+
+    // Данные для добавления
+    text := "Добавляем ещё одну строку в файл.\n"
+
+    // Добавляем данные в файл
+    file.WriteString(text)
+
+    fmt.Println("Данные успешно добавлены в файл.")
+
+    // Объяснение параметров os.OpenFile
+    // os.O_APPEND|os.O_WRONLY — данные добавляются в конец файла.
+    // 0644 — права доступа для файла (чтение/запись владельцем, чтение для остальных).
+}
+
+fmt.Println("12.3 Работа с CSV файлами")
+
+{
+    fmt.Println("Чтение данных из CSV файла")
+    
+    // открываем CSV файл
+    file, err := os.Open("data.csv")
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // создаём CSV reader
+    reader := csv.NewReader(file)
+
+    // читаем все строки файла
+    records, err := reader.ReadAll()
+    if err != nil {
+        fmt.Println("Ошибка чтения CSV:", err)
+        return
+    }
+    
+    // функция ReadAll() возвращает двухмерный слайс, где
+    // каждый подслайс содержит все атрибуты строки файла
+
+    // выводим содержимое файла
+    for _, record := range records {
+        fmt.Printf("Имя: %s, Возраст: %s, Город: %s\n", record[0], record[1], record[2])
+    }
+
+}
+
+{
+    // Пропустиить заголовки
+
+    // открываем CSV файл
+    file, err := os.Open("data.csv")
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // создаём CSV reader
+    reader := csv.NewReader(file)
+
+    // пропускаем первую строку (заголовок)
+    _, err = reader.Read()
+    if err != nil {
+        fmt.Println("Ошибка чтения заголовка:", err)
+        return
+    }
+
+    // reader.Read() возвращает два значения – строка которую мы прочитали и ошибку (если есть).
+    // так как заголовок на не нужон, мы просто игнорируем его с помощью "_".
+
+
+    // читаем остальные строки файла
+    records, err := reader.ReadAll()
+    if err != nil {
+        fmt.Println("Ошибка чтения CSV:", err)
+        return
+    }
+    
+    // Выводим содержимое файла
+    for _, record := range records {
+        fmt.Printf("Имя: %s, Возраст: %s, Город: %s\n", record[0], record[1], record[2])
+    }
+}
+
+{
+    file, err := os.Open("data.csv")
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close()
+
+    reader := csv.NewReader(file)
+    records, err := reader.ReadAll()
+    if err != nil {
+        fmt.Println("Ошибка чтения CSV:", err)
+        return
+    }
+
+    // используем подслайс [1:] чтобы исключить первую строку csv файла – заголовок.
+    // выводим остальное содержимое файла
+    for _, record := range records[1:] {
+        fmt.Printf("Имя: %s, Возраст: %s, Город: %s\n", record[0], record[1], record[2])
+    }
+}
+
+fmt.Println("Запись данных в CSV файл")
+
+{
+// создаём или открываем CSV файл
+    file, err := os.Create("output.csv")
+    if err != nil {
+        fmt.Println("Ошибка создания файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // создаём CSV Writer
+    writer := csv.NewWriter(file)
+
+    // записываем данные в файл
+    // очень важно не забывать вызывать эту функцию в самом конце
+    // иначе ничего записано не будет...
+    defer writer.Flush() 
+
+    // данные для записи
+    data := [][]string{
+        {"Имя", "Возраст", "Город"},
+        {"Иван", "50", "Одесса"},
+        {"Кирилл", "15", "Калифорния"},
+    }
+
+    // записываем строки
+    for _, record := range data {
+        if err := writer.Write(record); err != nil {
+            fmt.Println("Ошибка записи строки:", err)
+            return
+        }
+    }
+
+    fmt.Println("Данные успешно записаны в CSV файл.")
+}
+
+fmt.Println("Добавление данных в существующий CSV файл")
+
+{
+    // открываем CSV файл
+    file, err := os.OpenFile("output.csv", os.O_APPEND, 0644)
+    if err != nil {
+        fmt.Println("Ошибка создания файла:", err)
+        return
+    }
+    defer file.Close()
+
+    writer := csv.NewWriter(file)
+    defer writer.Flush()
+
+    // данные для вставки
+    data := [][]string{
+        {"Василий", "68", "Вена"},
+        {"Виталина", "120", "Таллин"},
+    }
+
+    for _, record := range data {
+        if err := writer.Write(record); err != nil {
+            fmt.Println("Ошибка записи строки:", err)
+            return
+        }
+    }
+
+    fmt.Println("Данные успешно добавлены в CSV файл.")
+}
+
+fmt.Println("12.4 Работа с JSON файлами")
+fmt.Println("Чтение данных из JSON-файла в карту")
+
+// Основные функции:
+
+// json.Marshal() — преобразует данные Go в формат JSON.
+// json.Unmarshal() — разбирает JSON и преобразует его в структуры Go.
+// json.Encoder и json.Decoder — для чтения и записи JSON-данных из потоков, таких как файлы.
+
+{
+    // oткрываем JSON файл
+    file, err := os.Open("data.json")
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // для хранения данных создаём переменную типа map
+    var data []map[string]interface{}
+
+    // декодируем JSON файл
+    decoder := json.NewDecoder(file)
+    err = decoder.Decode(&data)
+    if err != nil {
+        fmt.Println("Ошибка декодирования JSON:", err)
+        return
+    }
+
+    // выводим данные
+    for _, record := range data {
+        fmt.Printf("Имя: %s, Возраст: %.0f, Город: %s\n", record["name"], record["age"], record["city"])
+    }
+}
+
+fmt.Println("Запись данных в JSON-файл из карты")
+
+{
+    // данные для записи
+    data := []map[string]interface{}{
+        {"name": "Иван", "age": 50, "city": "Одесса"},
+        {"name": "Кирилл", "age": 15, "city": "Калифорния"},
+    }
+
+    // создаём JSON файл
+    file, err := os.Create("output.json")
+    if err != nil {
+        fmt.Println("Ошибка создания файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // создаём JSON encoder
+    encoder := json.NewEncoder(file)
+    err = encoder.Encode(data)
+    if err != nil {
+        fmt.Println("Ошибка записи в JSON файл:", err)
+        return
+    }
+
+    fmt.Println("Данные успешно записаны в JSON файл.")
+}
+
+fmt.Println("Чтение JSON-строки из переменной")
+
+{
+    // JSON строка
+    data := `[
+        {"name": "Иван", "age": 25, "city": "Киев"},
+        {"name": "Анна", "age": 30, "city": "Харьков"}
+    ]`
+
+    // слайс карт для хранения данных
+    var records []map[string]interface{}
+
+    // преобразуем строку JSON в данные Go
+    err := json.Unmarshal([]byte(data), &records)
+    if err != nil {
+        fmt.Println("Ошибка декодирования JSON:", err)
+        return
+    }
+
+    // выводим данные
+    for _, record := range records {
+        fmt.Printf("Имя: %s, Возраст: %.0f, Город: %s\n", record["name"], record["age"], record["city"])
+    }
+}
+
+fmt.Println("Добавление данных в существующий JSON-файл")
+
+{
+    // открываем существующий JSON файл
+    file, err := os.Open("output.json")
+    if err != nil {
+        fmt.Println("Ошибка открытия файла:", err)
+        return
+    }
+    defer file.Close()
+
+    // считываем данные из файла
+    var data []map[string]interface{}
+    decoder := json.NewDecoder(file)
+    err = decoder.Decode(&data)
+    if err != nil {
+        fmt.Println("Ошибка декодирования JSON:", err)
+        return
+    }
+    file.Close()
+
+    // добавляем новые записи
+    newData := []map[string]interface{}{
+        {"name": "Василий", "age": 68, "city": "Вена"},
+        {"name": "Виталина", "age": 120, "city": "Таллин"},
+    }
+    data = append(data, newData...)
+
+    // Перезаписываем файл
+    file, err = os.Create("output.json")
+    if err != nil {
+        fmt.Println("Ошибка создания файла:", err)
+        return
+    }
+    defer file.Close()
+
+    encoder := json.NewEncoder(file)
+    err = encoder.Encode(data)
+    if err != nil {
+        fmt.Println("Ошибка записи в JSON файл:", err)
+        return
+    }
+
+    fmt.Println("Данные успешно добавлены в JSON файл.")
 }
 
 }
 
+
+
+// БАЗА ДАННЫХ
+
+// Если ты все еще не написал проект самостоятельно выйди отсюда!
+
+ 
+
+// Надеюсь, эта лекция была интересной и наглядно продемонстрировала, что представляют собой базы данных, как они устроены на базовом уровне и как можно работать с файлами в языке Go.
+
+// Моя версия базы данных:
+
+//  1. main.go
+// Основной файл для запуска программы и обработки пользовательских запросов.
+
+// package main
+
+// import (
+//     "bufio"
+//     "fmt"
+//     "os"
+// )
+
+// func main() {
+//     // 2. в for {} Получаем запросы на упрощенном SQL, валидируем, парсим и сразу же отвечаем с данными
+//     // 3. CREATE_TABLE table_name field1, field2, field3
+//     // 4. SELECT table_name (* или id)
+//     // 5. INSERT table_name field1, field2, field3
+//     // 6. UPDATE table_name id, field1, field2, field3
+//     // 7. DELETE table_name id
+
+//     for {
+//         fmt.Print(">> ")
+//         userQuery, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+//         userQuery = userQuery[:len(userQuery)-1]
+
+//         if isValid, message := validateQuery(userQuery); !isValid {
+//             fmt.Println("Invalid request: " + message)
+//             continue
+//         }
+//         requestType, table, arguments := parseQuery(userQuery)
+//         if ok, response := handleQuery(requestType, table, arguments); !ok {
+//             fmt.Println("Error: " + response)
+//         } else {
+//             fmt.Println(response)
+//         }
+//         fmt.Println()
+//     }
+// }
+
+                  
+ 
+
+// 2. db.go
+// Модуль для работы с данными в формате .csv. Реализует функции для выполнения CRUD-операций.
+
+// package main
+
+// import (
+//     "encoding/csv"
+//     "fmt"
+//     "os"
+//     "strconv"
+//     "strings"
+// )
+
+// // createTable создает новую .csv таблицу
+// func createTable(tableName string, fieldNames []string) bool {
+//     file, err := os.Create(tableName + ".csv")
+//     if err != nil {
+//         return false
+//     }
+
+//     fieldNames = append([]string{"id"}, fieldNames...)
+//     writer := csv.NewWriter(file)
+//     err = writer.Write(fieldNames)
+//     if err != nil {
+//         return false
+//     }
+//     writer.Flush()
+//     return true
+// }
+
+// // insertRecord создает новый обьект в таблице
+// func insertRecord(tableName string, fieldValues []string) bool {
+//     file, err := os.OpenFile(tableName+".csv", os.O_WRONLY|os.O_APPEND, 0644)
+//     if err != nil {
+//         return false
+//     }
+//     defer file.Close()
+
+//     nextID, ok := getNextID(tableName)
+//     if !ok {
+//         return false
+//     }
+
+//     fieldValues = append([]string{fmt.Sprintf("%d", nextID)}, fieldValues...)
+//     writer := csv.NewWriter(file)
+
+//     if err := writer.Write(fieldValues); err != nil {
+//         return false
+//     }
+//     writer.Flush()
+//     return true
+// }
+
+// // getNextID возвращает следующее айди для нового обьекта в таблице
+// func getNextID(tableName string) (int, bool) {
+//     file, err := os.Open(tableName + ".csv")
+//     if err != nil {
+//         return 0, false
+//     }
+
+//     rows, err := csv.NewReader(file).ReadAll()
+//     if err != nil {
+//         return 0, false
+//     }
+//     maxID, _ := strconv.Atoi(rows[len(rows)-1][0])
+//     return maxID + 1, true
+// }
+
+// // updateRecord обновляет обьект из таблицы новыми значениями по айди
+// func updateRecord(tableName string, id string, fieldValues []string) bool {
+//     // os.O_RDWR – read/write режим
+//     file, err := os.OpenFile(tableName+".csv", os.O_RDWR, 0644)
+//     if err != nil {
+//         return false
+//     }
+//     defer file.Close()
+
+//     records, err := csv.NewReader(file).ReadAll()
+//     if err != nil {
+//         fmt.Printf("Error reading file: %v\n", err)
+//         return false
+//     }
+
+//     if len(records) == 0 {
+//         return false
+//     }
+
+//     updated := false
+//     for i, record := range records[1:] {
+//         if record[0] == id {
+//             if len(record) != len(fieldValues)+1 {
+//                 return false
+//             }
+//             records[i+1] = append([]string{id}, fieldValues...)
+//             updated = true
+//             break
+//         }
+//     }
+
+//     if !updated {
+//         return false
+//     }
+
+//     // записываем обратно в файл
+//     file.Seek(0, 0) // file.Seek() возвращает курсор обратно к началу файла
+//     writer := csv.NewWriter(file)
+//     err = writer.WriteAll(records)
+//     if err != nil {
+//         return false
+//     }
+//     defer writer.Flush()
+//     return true
+// }
+
+// // selectAll возвращает все обьекты из таблицы
+// func selectAll(tableName string) (string, bool) {
+//     file, err := os.Open(tableName + ".csv")
+//     if err != nil {
+//         return "", false
+//     }
+//     defer file.Close()
+
+//     records, err := csv.NewReader(file).ReadAll()
+//     if err != nil {
+//         return "", false
+//     }
+
+//     // strings.Builder это структура, которая используется для эффективного построения больших строк
+//     // https://www.calhoun.io/concatenating-and-building-strings-in-go/
+
+//     var result strings.Builder
+//     for _, record := range records {
+//         result.WriteString(strings.Join(record, ", "))
+//         result.WriteString("\n")
+//     }
+//     return result.String(), true
+// }
+
+// // selectRecord возвращает обьект из таблицы по айди
+// func selectRecord(tableName string, id string) (string, bool) {
+//     file, err := os.Open(tableName + ".csv")
+//     if err != nil {
+//         return "", false
+//     }
+//     defer file.Close()
+
+//     records, err := csv.NewReader(file).ReadAll()
+//     if err != nil {
+//         return "", false
+//     }
+
+//     for _, record := range records[1:] {
+//         if record[0] == id {
+//             return strings.Join(record, ", "), true
+//         }
+//     }
+//     return "", false
+// }
+
+// // deleteRecord удаляет обьект из csv таблицы по айди.
+// func deleteRecord(tableName string, id string) bool {
+//     file, err := os.OpenFile(tableName+".csv", os.O_RDWR, 0644)
+//     if err != nil {
+//         return false
+//     }
+//     defer file.Close()
+
+//     records, err := csv.NewReader(file).ReadAll()
+//     if err != nil {
+//         return false
+//     }
+
+//     if len(records) == 0 {
+//         return false
+//     }
+
+//     var recordsLeft [][]string
+//     found := false
+//     for _, record := range records {
+//         if record[0] != id {
+//             recordsLeft = append(recordsLeft, record)
+//         } else {
+//             found = true
+//         }
+//     }
+
+//     if !found {
+//         return false
+//     }
+
+//     // удаляем все содержимое файла
+//     file.Truncate(0)
+//     file.Seek(0, 0)
+
+//     // перезаписываем новое содержимое файла обратно
+//     err = csv.NewWriter(file).WriteAll(recordsLeft)
+//     if err != nil {
+//         return false
+//     }
+//     return true
+// }
+
+
+                  
+ 
+
+// 3. query.go
+// Модуль для обработки и управления пользовательскими запросами. Выполняет валидацию, парсинг и маршрутизацию запросов.
+
+// package main
+
+// import (
+//     "fmt"
+//     "os"
+//     "slices"
+//     "strings"
+// )
+
+// const (
+//     CreateTable = "CREATE_TABLE"
+//     Select      = "SELECT"
+//     Insert      = "INSERT"
+//     Update      = "UPDATE"
+//     Delete      = "DELETE"
+// )
+
+// // validateQuery проверяет валиден ли запрос.
+// func validateQuery(query string) (bool, string) {
+//     parts := strings.Split(query, " ") // функция strings.Split() разделяет первую строку по заданному разделителю (пробел в нашем случае)
+
+//     validQueryTypes := []string{
+//         CreateTable,
+//         Select,
+//         Insert,
+//         Update,
+//         Delete,
+//     }
+
+//     // проверяем команду
+//     if len(parts) < 3 || !slices.Contains(validQueryTypes, parts[0]) {
+//         return false, fmt.Sprintf("try again with one of (%s, %s, %s, %s, %s).\n", CreateTable, Select, Insert, Update, Delete)
+//     }
+
+//     // функция os.ReadDir() возвращает все файлы в текущей директории "."
+//     files, err := os.ReadDir(".")
+//     if err != nil {
+//         return false, "unknown error happened, please try again."
+//     }
+
+//     // поверяем существует ли файл <таблица>.csv
+//     // для улучшения производительности можно было бы загружать os.ReadDir() в самом начале
+//     // и передавать слайс как аргумент функции
+//     // таким образом можно было бы избежать вызова os.ReadDir() при каждом вызове validateQuery()
+
+//     if parts[0] == CreateTable {
+//         if len(parts) > 2 {
+//             return true, ""
+//         }
+//         return false, "no column names specified."
+//     }
+
+//     tableName := parts[1]
+//     for _, file := range files {
+//         filename := file.Name()
+//         if !file.IsDir() && filename == tableName+".csv" {
+//             return true, ""
+//         }
+//     }
+//     return false, "table with name " + tableName + " does not exist."
+// }
+
+// // parseUserQuery парсит сырой пользовательский запрос и возвращает операцию, таблицу и аргументы операции
+// func parseQuery(query string) (string, string, []string) {
+//     parts := strings.Split(query, " ") // функция strings.Split() разделяет первую строку по заданному разделителю (пробел в нашем случае)
+
+//     requestType, tableName, arguments := parts[0], parts[1], parts[2:]
+
+//     switch requestType {
+//     case CreateTable, Insert, Update:
+//         for i := 0; i < len(arguments); i++ {
+//             lastChar := arguments[i][len(arguments[i])-1]
+//             if lastChar == ',' || lastChar == '\n' {
+//                 arguments[i] = arguments[i][:len(arguments[i])-1]
+//             }
+//         }
+//         return requestType, tableName, arguments
+
+//     case Select, Delete:
+//         id := []string{arguments[0]}
+//         return requestType, tableName, id
+//     }
+//     return "", "", nil
+// }
+
+// // handleQuery выполняет все необходимые действия с нашей базой данной взависимости от операции
+// func handleQuery(requestType string, table string, arguments []string) (bool, string) {
+//     switch requestType {
+//     case CreateTable:
+//         ok := createTable(table, arguments)
+//         if ok {
+//             return true, "Created table " + table + " successfully!"
+//         }
+//         return false, "Unknown error occurred while creating the table " + table
+//     case Insert:
+//         ok := insertRecord(table, arguments)
+//         if ok {
+//             return true, "Inserted record into a table " + table + " successfully!"
+//         }
+//         return false, "Unknown error occurred while inserting the record."
+
+//     case Update:
+//         ok := updateRecord(table, arguments[0], arguments[1:])
+//         if ok {
+//             return true, "Updated record #" + arguments[0] + " in the table " + table + " successfully!"
+//         }
+//         return false, "Unknown error occurred while updating the record."
+
+//     case Select:
+//         if arguments[0] == "*" {
+//             objects, ok := selectAll(table)
+//             if ok {
+//                 return true, objects
+//             }
+//             return false, "Unknown error occurred while fetching all objects from table " + table
+//         }
+
+//         object, ok := selectRecord(table, arguments[0])
+//         if ok {
+//             return true, object
+//         }
+//         return false, "Unknown error occurred while fetching the object #" + arguments[0] + " from table " + table
+
+//     case Delete:
+//         ok := deleteRecord(table, arguments[0])
+//         if ok {
+//             return true, "Deleted object #" + arguments[0] + " from the table " + table + " successfully!"
+//         }
+//         return false, "Unknown error occurred while deleting the object #" + arguments[0] + " from the table " + table
+//     }
+//     return false, "Invalid query type (how did you pass validation bro?)"
+// }

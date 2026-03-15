@@ -73,3 +73,38 @@ func IsPalindrome(input string) bool {
     }
     return true
 }
+
+func LongestUniqueSubstring(s string) (int, string) {
+	// Карта для хранения последней позиции каждого символа
+	charMap := make(map[rune]int)
+	
+	maxLength := 0
+	start := 0          // Начало текущей подстроки
+	maxStart := 0       // Начало самой длинной подстроки
+	
+	// Проходим по строке
+	for i, char := range s {
+		// Если символ уже встречался и его позиция >= start
+		if pos, exists := charMap[char]; exists && pos >= start {
+			start = pos + 1 // Сдвигаем начало подстроки
+		}
+		
+		// Обновляем позицию символа
+		charMap[char] = i
+		
+		// Проверяем, не стала ли текущая подстрока длиннее максимальной
+		currentLength := i - start + 1
+		if currentLength > maxLength {
+			maxLength = currentLength
+			maxStart = start
+		}
+	}
+	
+	// Извлекаем подстроку
+	if maxLength > 0 {
+		substring := s[maxStart : maxStart+maxLength]
+		return maxLength, substring
+	}
+	
+	return 0, ""
+}
